@@ -170,7 +170,7 @@
 		this.offset = this.picker.offset();
 		this.size = this.picker[0][this.sizePos];
 		this.formater = options.formater;
-        this.tooltip_template = options.tooltip_template;
+        this.tooltip_template = this.element.data('slider-tooltip-template') || options.tooltip_template;
 
 		this.tooltip_separator = options.tooltip_separator;
 		this.tooltip_split = options.tooltip_split;
@@ -287,7 +287,7 @@
             var tooltipText;
 			if (this.range) {
                 if (this.tooltip_template) {
-                    tooltipText = tooltip_template.replace(
+                    tooltipText = this.tooltip_template.replace(
                         "{0}", this.formater(this.value[0])
                     ).replace(
                         "{1}", this.formater(this.value[1])
@@ -315,7 +315,7 @@
 
 			} else {
                 if (this.tooltip_template) {
-                    tooltipText = tooltip_template.replace(
+                    tooltipText = this.tooltip_template.replace(
                         "{0}", this.formater(this.value[0])
                     );
                 }
