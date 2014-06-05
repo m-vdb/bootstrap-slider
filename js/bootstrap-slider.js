@@ -170,7 +170,8 @@
 		this.offset = this.picker.offset();
 		this.size = this.picker[0][this.sizePos];
 		this.formater = options.formater;
-		
+        this.tooltip_template = options.tooltip_template;
+
 		this.tooltip_separator = options.tooltip_separator;
 		this.tooltip_split = options.tooltip_split;
 
@@ -283,10 +284,23 @@
                 }
 			}
 
+            var tooltipText;
 			if (this.range) {
-				this.tooltipInner.text(
-					this.formater(this.value[0]) + this.tooltip_separator + this.formater(this.value[1])
-				);
+                if (this.tooltip_template) {
+                    tooltipText = tooltip_template.replace(
+                        "{0}", this.formater(this.value[0])
+                    ).replace(
+                        "{1}", this.formater(this.value[1])
+                    );
+                }
+                else {
+                    tooltipText = (
+                        this.formater(this.value[0]) +
+                        this.tooltip_separator +
+                        this.formater(this.value[1])
+                    );
+                }
+				this.tooltipInner.text(tooltipText);
 				this.tooltip[0].style[this.stylePos] = this.size * (positionPercentages[0] + (positionPercentages[1] - positionPercentages[0])/2)/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
 
                 this.tooltipInner_min.text(
@@ -300,9 +314,15 @@
 				this.tooltip_max[0].style[this.stylePos] = this.size * ( (positionPercentages[1])/100) - (this.orientation === 'vertical' ? this.tooltip_max.outerHeight()/2 : this.tooltip_max.outerWidth()/2) +'px';
 
 			} else {
-				this.tooltipInner.text(
-					this.formater(this.value[0])
-				);
+                if (this.tooltip_template) {
+                    tooltipText = tooltip_template.replace(
+                        "{0}", this.formater(this.value[0])
+                    );
+                }
+                else {
+                    tooltipText = this.formater(this.value[0]);
+                }
+				this.tooltipInner.text(tooltipText);
 				this.tooltip[0].style[this.stylePos] = this.size * positionPercentages[0]/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
 			}
 		},
@@ -410,7 +430,7 @@
 			this.layout();
 
 			var val = this.calculateValue();
-			
+
 			this.element.trigger({
 					type: 'slideStart',
 					value: val
@@ -564,7 +584,7 @@
 
 			if (this.range) {
 				this.value[0] = this.applyPrecision(this.value[0]);
-				this.value[1] = this.applyPrecision(this.value[1]); 
+				this.value[1] = this.applyPrecision(this.value[1]);
 
 				this.value[0] = Math.max(this.min, Math.min(this.max, this.value[0]));
 				this.value[1] = Math.max(this.min, Math.min(this.max, this.value[1]));
@@ -741,6 +761,7 @@
 		tooltip: 'show',
 		tooltip_separator: ':',
 		tooltip_split: false,
+        tooltip_template: null,
 		natural_arrow_keys: false,
 		handle: 'round',
 		reversed : false,
